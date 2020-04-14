@@ -4,7 +4,6 @@ import classNames from "classnames";
 import InterviewerListItem from "components/InterviewerListItem";
 
 export default function InterviewerList(props) {
-  console.log(props)
   const { interviewers, onChange } = props;
 
   const interviewerList = interviewers.map((interviewer) => {
