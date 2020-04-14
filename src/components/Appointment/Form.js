@@ -9,7 +9,6 @@ const Form = (props) => {
 
   function reset() {
     setName("");
-    document.getElementsByTagName('input')[0].value = "";
     return setInterviewer(null);
   }
 
@@ -26,6 +25,7 @@ const Form = (props) => {
             className="appointment__create-input text--semi-bold"
             name="name"
             type="text"
+            value={name}
             placeholder="Enter Student Name"
             onChange={(e) => setName(e.target.value)}
           />
