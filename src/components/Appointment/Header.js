@@ -1,5 +1,4 @@
 import React from "react";
-// import Appointment from "components/Appointment";
 
 const Header = (props) => {
   const { time } = props;
