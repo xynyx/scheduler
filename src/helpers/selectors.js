@@ -5,13 +5,13 @@ export function getAppointmentsForDay(state, day) {
   if (getSpecificDay.length === 0) {
     return [];
   }
-  const appointmentsForDay = getSpecificDay[0].appointments;
-  const appointmentList = appointmentsForDay.map((appt) => {
+  const appointmentList = getSpecificDay[0].appointments;
+  const appointmentsForDay = appointmentList.map((appt) => {
     for (const appointment in state.appointments) {
       if (appt === Number(appointment)) {
         return state.appointments[appointment];
       }
     }
   });
-  return appointmentList;
+  return appointmentsForDay;
 }
