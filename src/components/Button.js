@@ -1,6 +1,6 @@
 import React from "react";
 import "components/Button.scss";
-// classnames library; easier set-up of variable class names
+
 const classNames = require("classnames");
 
 export default function Button(props) {

@@ -61,8 +61,11 @@ export default function Application(props) {
   });
 
   useEffect(() => {
-    axios.get("/api/days").then((response) => setDays(response.data));
-  }, [])
+    axios
+      .get("/api/days")
+      .then((response) => setDays(response.data))
+      .catch((e) => e.stack);
+  }, []);
 
   return (
     <main className="layout">
