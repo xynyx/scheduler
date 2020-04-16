@@ -14,6 +14,8 @@ export default function Application() {
     interviewers: {},
   });
 
+  console.log(state.days[0])
+
   const setDay = day => setState({ ...state, day });
   
   const appointments = getAppointmentsForDay(state, state.day);
