@@ -19,7 +19,15 @@ export default function Appointment(props) {
       <Header time={time} />
       <article time={time} className="appointment">
         {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
-        {mode === CREATE && <Form name={""}interviewers={interviewers} interviewer={[]} onSave={onSave} onCancel={() => back()} />}
+        {mode === CREATE && (
+          <Form
+            name={""}
+            interviewers={interviewers}
+            interviewer={[]}
+            onSave={onSave}
+            onCancel={() => back()}
+          />
+        )}
         {mode === SHOW && (
           <Show
             student={interview.student}
@@ -32,5 +40,3 @@ export default function Appointment(props) {
     </>
   );
 }
-
-/* We can use import Appointment from "components/Appointment"; to import a component from the src/components/Appoinment/index.js module. It is an alternative to import Appointment from "components/Appointment/Appointment";. */

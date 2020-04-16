@@ -22,9 +22,7 @@ export default function Application() {
 
   const appointmentsForDay = getAppointmentsForDay(state, state.day);
   const interviewersForDay = getInterviewersForDay(state, state.day);
-  console.log(interviewersForDay)
   const appointmentList = appointmentsForDay.map(appointment => {
-    console.log(appointment)
     const interview = getInterview(state, appointment.interview);
     return (
       <Appointment
@@ -32,6 +30,7 @@ export default function Application() {
         {...appointment}
         interview={interview}
         interviewers={interviewersForDay}
+        bookInterview={bookInterview(appointment.id, interview)}
       />
     );
   });
