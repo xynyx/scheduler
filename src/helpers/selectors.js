@@ -17,9 +17,15 @@ export function getAppointmentsForDay(state, day) {
   return appointmentsForDay;
 }
 
+// Return new object containing interview data if object contains interviewer
+// Return null if there is no interview data
 export function getInterview(state, interview) {
-  // Return new object containing interview data
-  // If object contains interviewer
-
-  // Otherwise return null
+  if (!interview) return null;
+  const { interviewer } = interview;
+  const interviewerData = state.interviewers[interviewer];
+  const interviewWithInterviewer = {
+    student: interview.student,
+    interviewer: interviewerData,
+  };
+  return interviewWithInterviewer;
 }
