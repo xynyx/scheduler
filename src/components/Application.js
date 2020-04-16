@@ -23,6 +23,13 @@ export default function Application() {
       ...state.appointments[id],
       interview: { ...interview },
     };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+
+    return setState({ ...state, appointments });
   }
 
   const setDay = day => setState({ ...state, day });
