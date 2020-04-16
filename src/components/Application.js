@@ -18,6 +18,13 @@ export default function Application() {
     interviewers: {},
   });
 
+  function bookInterview(id, interview) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview },
+    };
+  }
+
   const setDay = day => setState({ ...state, day });
 
   const appointmentsForDay = getAppointmentsForDay(state, state.day);
@@ -30,7 +37,7 @@ export default function Application() {
         {...appointment}
         interview={interview}
         interviewers={interviewersForDay}
-        bookInterview={bookInterview(appointment.id, interview)}
+        bookInterview={bookInterview}
       />
     );
   });

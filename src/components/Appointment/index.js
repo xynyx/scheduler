@@ -7,12 +7,29 @@ import Form from "components/Appointment/Form";
 import useVisualMode from "hooks/useVisualMode";
 
 export default function Appointment(props) {
-  const { time, interview, onEdit, onDelete, onSave, interviewers } = props;
+  const {
+    id,
+    time,
+    interview,
+    onEdit,
+    onDelete,
+    onSave,
+    interviewers,
+    bookInterview,
+  } = props;
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
   const CREATE = "CREATE";
 
   const { mode, transition, back } = useVisualMode(interview ? SHOW : EMPTY);
+
+  function save(name, interviewer) {
+    const interview = {
+      student: name,
+      interviewer,
+    };
+    return bookInterview(id, interview);
+  }
 
   return (
     <>
@@ -21,10 +38,10 @@ export default function Appointment(props) {
         {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
         {mode === CREATE && (
           <Form
-            name={""}
+            // name={""}
             interviewers={interviewers}
-            interviewer={[]}
-            onSave={onSave}
+            // interviewer={[]}
+            onSave={save}
             onCancel={() => back()}
           />
         )}
