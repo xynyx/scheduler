@@ -1,5 +1,10 @@
 import { useState } from "react";
 export default function useVisualMode(initialMode) {
   const [mode, setMode] = useState(initialMode);
-  return { mode };
+
+  function transition(initialMode) {
+    return setMode(initialMode);
+  }
+
+  return { mode, transition };
 }
