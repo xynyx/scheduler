@@ -16,3 +16,10 @@ export function getAppointmentsForDay(state, day) {
   });
   return appointmentsForDay;
 }
+
+export function getInterview(state, interview) {
+  // Return new object containing interview data
+  // If object contains interviewer
+
+  // Otherwise return null
+}
