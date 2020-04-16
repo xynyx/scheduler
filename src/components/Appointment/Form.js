@@ -7,15 +7,15 @@ const Form = (props) => {
   const [interviewer, setInterviewer] = useState(props.interviewer || null);
   const { interviewers, onSave, onCancel } = props;
 
-  function reset() {
-    setName("");
-    return setInterviewer(null);
-  }
+  // function reset() {
+  //   setName("");
+  //   return setInterviewer(null);
+  // }
 
-  function cancel() {
-    reset();
-    return onCancel;
-  }
+  // function cancel() {
+  //   reset();
+  //   return onCancel;
+  // }
 
   return (
     <main className="appointment__card appointment__card--create">
@@ -38,7 +38,7 @@ const Form = (props) => {
       </section>
       <section className="appointment__card-right">
         <section className="appointment__actions">
-          <Button onClick={() => cancel()} danger>
+          <Button onClick={onCancel} danger>
             Cancel
           </Button>
           <Button onClick={() => onSave(name, interviewer)} confirm>
