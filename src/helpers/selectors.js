@@ -29,3 +29,7 @@ export function getInterview(state, interview) {
   };
   return interviewWithInterviewerInfo;
 }
+
+export function getInterviewersForDay() {
+  
+}

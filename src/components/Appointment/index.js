@@ -7,7 +7,6 @@ import Form from "components/Appointment/Form";
 import useVisualMode from "hooks/useVisualMode";
 
 export default function Appointment(props) {
-  console.log(props.interview)
   const { time, interview, onEdit, onDelete, onSave } = props;
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
