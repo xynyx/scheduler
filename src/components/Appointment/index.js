@@ -40,13 +40,22 @@ export default function Appointment(props) {
       interviewer,
     };
     transition(SAVING);
-    
-    bookInterview(id, interview, () => transition(SHOW), () => transition(ERROR_SAVE, true));
+
+    bookInterview(
+      id,
+      interview,
+      () => transition(SHOW),
+      () => transition(ERROR_SAVE, true)
+    );
   }
 
   function deleteAppt() {
     transition(DELETING, true);
-    cancelInterview(id, () => transition(EMPTY), () => transition(ERROR_DELETE, true));
+    cancelInterview(
+      id,
+      () => transition(EMPTY),
+      () => transition(ERROR_DELETE, true)
+    );
   }
 
   return (
@@ -79,10 +88,15 @@ export default function Appointment(props) {
           />
         )}
         {mode === SAVING && <Status message="Saving" />}
-        {mode === ERROR_SAVE && <Error onClose={() => back()}message="Could not save appointment" />}
+        {mode === ERROR_SAVE && (
+          <Error onClose={() => back()} message="Could not save appointment" />
+        )}
         {mode === DELETING && <Status message="Deleting" />}
         {mode === ERROR_DELETE && (
-          <Error onClose={() => back()} message="Could not delete appointment" />
+          <Error
+            onClose={() => back()}
+            message="Could not delete appointment"
+          />
         )}
         {mode === CONFIRM && (
           <Confirm onConfirm={deleteAppt} onCancel={() => transition(SHOW)} />
