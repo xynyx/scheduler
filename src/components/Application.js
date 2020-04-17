@@ -18,6 +18,8 @@ export default function Application() {
     interviewers: {},
   });
 
+  console.log(state.appointments);
+
   function bookInterview(id, interview, cb) {
     const appointment = {
       ...state.appointments[id],
@@ -29,12 +31,33 @@ export default function Application() {
       [id]: appointment,
     };
 
-    axios.put(`/api/appointments/${id}`, 
-      appointment
-    ).then(() => {
-      setState({ ...state, appointments });
-      cb();
-    }).catch(e => console.error(e))
+    axios
+      .put(`/api/appointments/${id}`, appointment)
+      .then(() => {
+        setState({ ...state, appointments });
+        cb();
+      })
+      .catch(e => console.error(e));
+  }
+
+  function cancelInterview(id, cb) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: null,
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+
+    axios
+      .delete(`/api/appointments/${id}`, id)
+      .then(() => {
+        setState({ ...state, appointments });
+        cb();
+      })
+      .catch(e => console.error(e));
   }
 
   const setDay = day => setState({ ...state, day });
@@ -50,6 +73,7 @@ export default function Application() {
         interview={interview}
         interviewers={interviewersForDay}
         bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
       />
     );
   });

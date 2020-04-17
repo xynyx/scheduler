@@ -11,7 +11,7 @@ const Confirm = (props) => {
   });
   return (
     <main className={appointmentClass}>
-      <h1 className="text--semi-bold">Delete the appointment?</h1>
+      <h1 className="text--semi-bold">Are you sure you want to delete?</h1>
       <section className="appointment__actions">
         <Button onClick={onCancel} danger>
           Cancel
