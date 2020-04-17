@@ -64,11 +64,12 @@ export default function Appointment(props) {
             student={interview.student}
             interviewer={interview.interviewer.name}
             onEdit={onEdit}
-            onDelete={deleteAppt}
+            onDelete={() => transition(CONFIRM)}
           />
         )}
         {mode === SAVING && <Status message="Saving" />}
         {mode === DELETING && <Status message="Deleting" />}
+        {mode === CONFIRM && <Confirm onConfirm={deleteAppt} onCancel={() => transition(SHOW)}/>}
       </article>
     </>
   );
