@@ -41,21 +41,16 @@ export default function Appointment(props) {
     };
     transition(SAVING);
 
-    bookInterview(
-      id,
-      interview,
-      () => transition(SHOW),
-      () => transition(ERROR_SAVE, true)
-    );
+    bookInterview(id, interview)
+      .then(() => transition(SHOW))
+      .catch(() => transition(ERROR_SAVE, true));
   }
 
   function deleteAppt() {
     transition(DELETING, true);
-    cancelInterview(
-      id,
-      () => transition(EMPTY),
-      () => transition(ERROR_DELETE, true)
-    );
+    cancelInterview(id)
+      .then(() => transition(EMPTY))
+      .catch(() => transition(ERROR_DELETE, true));
   }
 
   return (

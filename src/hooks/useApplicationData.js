@@ -11,7 +11,7 @@ export default function useApplicationData() {
 
   const setDay = day => setState({ ...state, day });
 
-  function bookInterview(id, interview, showMode, errorMode) {
+  function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview },
@@ -22,16 +22,12 @@ export default function useApplicationData() {
       [id]: appointment,
     };
 
-    axios
-      .put(`/api/appointments/${id}`, appointment)
-      .then(() => {
-        setState({ ...state, appointments });
-        showMode();
-      })
-      .catch(() => errorMode());
+    return Promise.resolve(
+      axios.put(`/api/appointments/${id}`, appointment)
+    ).then(() => setState({ ...state, appointments }));
   }
 
-  function cancelInterview(id, showMode, errorMode) {
+  function cancelInterview(id) {
     const appointment = {
       ...state.appointments[id],
       interview: null,
@@ -42,13 +38,9 @@ export default function useApplicationData() {
       [id]: appointment,
     };
 
-    axios
-      .delete(`/api/appointments/${id}`, id)
-      .then(() => {
-        setState({ ...state, appointments });
-        showMode();
-      })
-      .catch(() => errorMode());
+    return Promise.resolve(
+      axios.delete(`/api/appointments/${id}`, id)
+    ).then(() => setState({ ...state, appointments }));
   }
 
   useEffect(() => {
