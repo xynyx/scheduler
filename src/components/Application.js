@@ -18,7 +18,7 @@ export default function Application() {
     interviewers: {},
   });
 
-  function bookInterview(id, interview) {
+  function bookInterview(id, interview, cb) {
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview },
@@ -29,7 +29,12 @@ export default function Application() {
       [id]: appointment,
     };
 
-    return setState({ ...state, appointments });
+    axios.put(`/api/appointments/${id}`, 
+      appointment
+    ).then(() => {
+      setState({ ...state, appointments });
+      cb();
+    }).catch(e => console.error(e))
   }
 
   const setDay = day => setState({ ...state, day });
