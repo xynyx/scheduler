@@ -7,16 +7,23 @@ import {
   getInterviewersForDay,
   getInterview,
 } from "helpers/selectors";
+import useApplicationData from "hooks/useApplicationData";
 
 import "components/Application.scss";
 
 export default function Application() {
-  const [state, setState] = useState({
-    day: "Monday",
-    days: [],
-    appointments: {},
-    interviewers: {},
-  });
+  const {
+    state,
+    setDay,
+    bookInterview,
+    cancelInterview
+  } = useApplicationData();
+  // const [state, setState] = useState({
+  //   day: "Monday",
+  //   days: [],
+  //   appointments: {},
+  //   interviewers: {},
+  // });
 
   console.log(state.appointments);
 
