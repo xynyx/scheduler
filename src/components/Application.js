@@ -20,7 +20,7 @@ export default function Application() {
 
   console.log(state.appointments);
 
-  function bookInterview(id, interview, cb) {
+  function bookInterview(id, interview, showMode, errorMode) {
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview },
@@ -35,12 +35,12 @@ export default function Application() {
       .put(`/api/appointments/${id}`, appointment)
       .then(() => {
         setState({ ...state, appointments });
-        cb();
+        showMode();
       })
-      .catch(e => console.error(e));
+      .catch(() => errorMode());
   }
 
-  function cancelInterview(id, cb) {
+  function cancelInterview(id, showMode, errorMode) {
     const appointment = {
       ...state.appointments[id],
       interview: null,
@@ -55,9 +55,9 @@ export default function Application() {
       .delete(`/api/appointments/${id}`, id)
       .then(() => {
         setState({ ...state, appointments });
-        cb();
+        showMode();
       })
-      .catch(e => console.error(e));
+      .catch(() => errorMode());
   }
 
   const setDay = day => setState({ ...state, day });
