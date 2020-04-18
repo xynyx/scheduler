@@ -15,12 +15,12 @@ function reducer(state, action) {
     case SET_APPLICATION_DATA:
       return {
         ...state,
-        ...action.data,
+        ...action.payload,
       };
     case SET_INTERVIEW:
       return {
         ...state,
-        ...action.data,
+        ...action.payload,
       };
 
     default:
@@ -103,7 +103,7 @@ export default function useApplicationData() {
     return Promise.resolve(
       axios.put(`/api/appointments/${id}`, appointment)
     ).then(() => {
-      dispatch({ type: SET_INTERVIEW, data: { appointments, days } });
+      dispatch({ type: SET_INTERVIEW, payload: { appointments, days } });
     });
   }
 
@@ -136,7 +136,7 @@ export default function useApplicationData() {
 
     return Promise.resolve(axios.delete(`/api/appointments/${id}`, id)).then(
       () => {
-        dispatch({ type: SET_INTERVIEW, data: { appointments, days } });
+        dispatch({ type: SET_INTERVIEW, payload: { appointments, days } });
       }
     );
   }
@@ -157,7 +157,7 @@ export default function useApplicationData() {
       .then(all => {
         dispatch({
           type: SET_APPLICATION_DATA,
-          data: {
+          payload: {
             days: all[0].data,
             appointments: all[1].data,
             interviewers: all[2].data,
