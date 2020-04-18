@@ -12,7 +12,9 @@ export default function useApplicationData() {
   const setDay = day => setState({ ...state, day });
 
   const dayNumber = id => {
-    return Math.floor(id / 5);
+    const day = Math.floor(id / 5);
+    if (day === 5) return 4;
+    return day;
   };
 
   function remainingSpots(day, dayCopy, appointments) {
@@ -27,6 +29,20 @@ export default function useApplicationData() {
     return numberOfSpotsLeft;
   }
 
+  const updatedDaysWithSpots = (daysCopy, day, appointments) => {
+    const specificDayCopy = {
+      ...state.days[day],
+      spots: remainingSpots(day, daysCopy, appointments),
+    };
+    const days = daysCopy.map((day, index) => {
+      if (index === day) {
+        return specificDayCopy;
+      }
+      return day;
+    });
+    return days;
+  };
+
   // CRASHES WHEN NO INTERVIEWER IS SELECTED....
 
   function bookInterview(id, interview) {
@@ -40,20 +56,22 @@ export default function useApplicationData() {
       [id]: appointment,
     };
 
+    const daysCopy = [...state.days];
     const specificDayCopy = {
       ...state.days[dayNumber(id)],
-      spots: state.days[dayNumber(id)].spots - 1,
+      spots: remainingSpots(dayNumber(id), daysCopy, appointments),
     };
-
-    const dayCopy = {
-      ...state.days,
-      [dayNumber(id)]: specificDayCopy,
-    };
+    const days = daysCopy.map((day, index) => {
+      if (index === dayNumber(id)) {
+        return specificDayCopy;
+      }
+      return day;
+    });
 
     return Promise.resolve(
       axios.put(`/api/appointments/${id}`, appointment)
     ).then(() => {
-      setState({ ...state, appointments });
+      setState({ ...state, appointments, days });
     });
   }
 
@@ -68,29 +86,26 @@ export default function useApplicationData() {
       [id]: appointment,
     };
 
+    const daysCopy = [...state.days];
     const specificDayCopy = {
       ...state.days[dayNumber(id)],
-      spots: state.days[dayNumber(id)].spots + 1,
+      spots: remainingSpots(dayNumber(id), daysCopy, appointments),
     };
-    // console.log(dayNumber(id))
-    //     console.log(appointments)
+    const days = daysCopy.map((day, index) => {
+      if (index === dayNumber(id)) {
+        return specificDayCopy;
+      }
+      return day;
+    });
 
-    const dayCopy = {
-      ...state.days,
-      [dayNumber(id)]: specificDayCopy,
-    };
+    // const days = updatedDaysWithSpots(daysCopy, dayNumber(id), appointments);
+    // console.log(days);
 
-    console.log(remainingSpots(dayNumber(id), dayCopy, appointments));
-
-    // console.log(appointments)
-    //     console.log("DAYS", state.days)
-    //     console.log("COPY", dayCopy)
-    // APPOINTMENT ARRAY (1 - 5)
-    // console.log("COPY", dayCopy[dayNumber(id)].appointments)
-
-    return Promise.resolve(
-      axios.delete(`/api/appointments/${id}`, id)
-    ).then(() => setState({ ...state, appointments }));
+    return Promise.resolve(axios.delete(`/api/appointments/${id}`, id)).then(
+      () => {
+        setState({ ...state, appointments, days });
+      }
+    );
   }
 
   useEffect(() => {
