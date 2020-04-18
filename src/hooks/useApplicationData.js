@@ -87,6 +87,7 @@ export default function useApplicationData() {
       [id]: appointment,
     };
 
+    console.log("STATE", appointment);
     const daysCopy = [...state.days];
     const specificDayCopy = {
       ...state.days[dayNumber(id)],
@@ -139,26 +140,35 @@ export default function useApplicationData() {
   }
   // Opening WebSocket connection
   useEffect(() => {
-    const connection = new WebSocket("ws://localhost:8001");
-    connection.onopen = event => {
+    const connection = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+    connection.onopen = () => {
       connection.send("ping");
-      connection.onmessage = (event) => {
-        const interview = JSON.parse(event.data)
+      connection.onmessage = event => {
+        // console.log("STATE WTF", state)
+        const interview = JSON.parse(event.data);
         if (interview.type === SET_INTERVIEW) {
-          console.log("HI")
+          // console.log("ID", interview.id)
+          const appointments = {
+            ...state.appointments,
+            [interview.id]: {
+              ...state.appointments[interview.id],
+              interview: interview.interview,
+            },
+          };
+          console.log("INTERVIEW", interview);
+          // console.log("HI");
+          console.log("COPY", appointments);
+          dispatch({ type: SET_INTERVIEW, appointments });
         }
-        console.log(`Message Received: ${event.data}`)
-      }
-      if (connection.readyState === 1) {
-        console.log()
-      }
+        // console.log(`Message Received: ${event.data}`)
+      };
     };
     // console.log(connection.readyState);
     // connection.onopen = event => {
     //   console.log(connection.readyState);
     // };
     return () => connection.close();
-  }, []);
+  });
 
   useEffect(() => {
     Promise.all([
