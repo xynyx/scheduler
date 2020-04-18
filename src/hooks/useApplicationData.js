@@ -11,6 +11,24 @@ export default function useApplicationData() {
 
   const setDay = day => setState({ ...state, day });
 
+  const dayNumber = id => {
+    return Math.floor(id / 5);
+  };
+
+  function remainingSpots(day, dayCopy, appointments) {
+    const appointmentIDArray = dayCopy[day].appointments;
+
+    let numberOfSpotsLeft = 0;
+    appointmentIDArray.forEach(appointment => {
+      if (appointments[appointment].interview === null) {
+        numberOfSpotsLeft++;
+      }
+    });
+    return numberOfSpotsLeft;
+  }
+
+  // CRASHES WHEN NO INTERVIEWER IS SELECTED....
+
   function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
@@ -22,9 +40,21 @@ export default function useApplicationData() {
       [id]: appointment,
     };
 
+    const specificDayCopy = {
+      ...state.days[dayNumber(id)],
+      spots: state.days[dayNumber(id)].spots - 1,
+    };
+
+    const dayCopy = {
+      ...state.days,
+      [dayNumber(id)]: specificDayCopy,
+    };
+
     return Promise.resolve(
       axios.put(`/api/appointments/${id}`, appointment)
-    ).then(() => setState({ ...state, appointments }));
+    ).then(() => {
+      setState({ ...state, appointments });
+    });
   }
 
   function cancelInterview(id) {
@@ -37,6 +67,26 @@ export default function useApplicationData() {
       ...state.appointments,
       [id]: appointment,
     };
+
+    const specificDayCopy = {
+      ...state.days[dayNumber(id)],
+      spots: state.days[dayNumber(id)].spots + 1,
+    };
+    // console.log(dayNumber(id))
+    //     console.log(appointments)
+
+    const dayCopy = {
+      ...state.days,
+      [dayNumber(id)]: specificDayCopy,
+    };
+
+    console.log(remainingSpots(dayNumber(id), dayCopy, appointments));
+
+    // console.log(appointments)
+    //     console.log("DAYS", state.days)
+    //     console.log("COPY", dayCopy)
+    // APPOINTMENT ARRAY (1 - 5)
+    // console.log("COPY", dayCopy[dayNumber(id)].appointments)
 
     return Promise.resolve(
       axios.delete(`/api/appointments/${id}`, id)

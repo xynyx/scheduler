@@ -3,21 +3,22 @@ import DayListItem from "./DayListItem";
 
 export default function DayList(props) {
   const { days, setDay } = props;
-  const dayList = days.map((day) => {
-    return <DayListItem
-      key={day.id}
-      name={day.name}
-      spots={day.spots}
-      selected={day.name === props.day}
-      setDay={(event) => setDay(day.name)}
-    />;
+  const dayList = days.map(day => {
+    return (
+      <DayListItem
+        key={day.id}
+        name={day.name}
+        spots={day.spots}
+        selected={day.name === props.day}
+        setDay={event => setDay(day.name)}
+      />
+    );
   });
 
-  return (
-    <>
-      <ul>
-        {dayList}
-      </ul>
-    </>
-  );
+  return <ul>{dayList}</ul>;
 }
+
+// When on specific day
+// Knows im on tuesday - says 3 spots remaining
+// If i delete appointment - should update to 4 spots remaining
+// If i add appt - should update to 3 spots again
