@@ -131,9 +131,6 @@ export default function useApplicationData() {
       return day;
     });
 
-    // const days = updatedDaysWithSpots(daysCopy, dayNumber(id), appointments);
-    // console.log(days);
-
     return Promise.resolve(axios.delete(`/api/appointments/${id}`, id)).then(
       () => {
         dispatch({ type: SET_INTERVIEW, payload: { appointments, days } });
@@ -141,12 +138,13 @@ export default function useApplicationData() {
     );
   }
 
-  //   return Promise.resolve(axios.delete(`/api/appointments/${id}`, id)).then(
-  //     () => {
-  //       setState({ ...state, appointments, days });
-  //     }
-  //   );
-  // }
+  useEffect(() => {
+    const connection = new WebSocket("ws://localhost:8001")
+    console.log(connection.readyState)
+    connection.onopen = (event) => {
+      console.log(connection.readyState)
+    }
+  }, [])
 
   useEffect(() => {
     Promise.all([
@@ -166,23 +164,6 @@ export default function useApplicationData() {
       })
       .catch(e => e.stack);
   }, []);
-
-  // useEffect(() => {
-  //   Promise.all([
-  //     Promise.resolve(axios.get("/api/days")),
-  //     Promise.resolve(axios.get("/api/appointments")),
-  //     Promise.resolve(axios.get("/api/interviewers")),
-  //   ])
-  //     .then(all => {
-  //       setState(prev => ({
-  //         ...prev,
-  //         days: all[0].data,
-  //         appointments: all[1].data,
-  //         interviewers: all[2].data,
-  //       }));
-  //     })
-  //     .catch(e => e.stack);
-  // }, []);
 
   return { state, setDay, bookInterview, cancelInterview };
 }
