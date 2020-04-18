@@ -74,7 +74,7 @@ export default function Appointment(props) {
             onCancel={() => back()}
           />
         )}
-        {mode === SHOW && (
+        {mode === SHOW && interview && (
           <Show
             student={interview.student}
             interviewer={interview.interviewer.name}

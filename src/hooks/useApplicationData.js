@@ -137,14 +137,28 @@ export default function useApplicationData() {
       }
     );
   }
-
+  // Opening WebSocket connection
   useEffect(() => {
-    const connection = new WebSocket("ws://localhost:8001")
-    console.log(connection.readyState)
-    connection.onopen = (event) => {
-      console.log(connection.readyState)
-    }
-  }, [])
+    const connection = new WebSocket("ws://localhost:8001");
+    connection.onopen = event => {
+      connection.send("ping");
+      connection.onmessage = (event) => {
+        const interview = JSON.parse(event.data)
+        if (interview.type === SET_INTERVIEW) {
+          console.log("HI")
+        }
+        console.log(`Message Received: ${event.data}`)
+      }
+      if (connection.readyState === 1) {
+        console.log()
+      }
+    };
+    // console.log(connection.readyState);
+    // connection.onopen = event => {
+    //   console.log(connection.readyState);
+    // };
+    return () => connection.close();
+  }, []);
 
   useEffect(() => {
     Promise.all([
