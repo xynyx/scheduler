@@ -29,19 +29,19 @@ export default function useApplicationData() {
     return numberOfSpotsLeft;
   }
 
-  const updatedDaysWithSpots = (daysCopy, day, appointments) => {
-    const specificDayCopy = {
-      ...state.days[day],
-      spots: remainingSpots(day, daysCopy, appointments),
-    };
-    const days = daysCopy.map((day, index) => {
-      if (index === day) {
-        return specificDayCopy;
-      }
-      return day;
-    });
-    return days;
-  };
+  // const updatedDaysWithSpots = (daysCopy, day, appointments) => {
+  //   const specificDayCopy = {
+  //     ...state.days[day],
+  //     spots: remainingSpots(day, daysCopy, appointments),
+  //   };
+  //   const days = daysCopy.map((day, index) => {
+  //     if (index === day) {
+  //       return specificDayCopy;
+  //     }
+  //     return day;
+  //   });
+  //   return days;
+  // };
 
   // CRASHES WHEN NO INTERVIEWER IS SELECTED....
 
@@ -61,6 +61,7 @@ export default function useApplicationData() {
       ...state.days[dayNumber(id)],
       spots: remainingSpots(dayNumber(id), daysCopy, appointments),
     };
+
     const days = daysCopy.map((day, index) => {
       if (index === dayNumber(id)) {
         return specificDayCopy;
@@ -91,6 +92,7 @@ export default function useApplicationData() {
       ...state.days[dayNumber(id)],
       spots: remainingSpots(dayNumber(id), daysCopy, appointments),
     };
+
     const days = daysCopy.map((day, index) => {
       if (index === dayNumber(id)) {
         return specificDayCopy;
