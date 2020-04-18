@@ -1,19 +1,50 @@
-import { useState, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 import axios from "axios";
 
+const SET_DAY = "SET_DAY";
+const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
+const SET_INTERVIEW = "SET_INTERVIEW";
+
+function reducer(state, action) {
+  switch (action.type) {
+    case SET_DAY:
+      return {
+        ...state,
+        day: action.day,
+      };
+    case SET_APPLICATION_DATA:
+      return {
+        ...state,
+        ...action.data,
+      };
+    case SET_INTERVIEW:
+      return {
+        ...state,
+        ...action.data,
+      };
+
+    default:
+      throw new Error(
+        `Tried to reduce with unsupported action type: ${action.type}`
+      );
+  }
+}
+
 export default function useApplicationData() {
-  const [state, setState] = useState({
+  const [state, dispatch] = useReducer(reducer, {
     day: "Monday",
     days: [],
     appointments: {},
     interviewers: {},
   });
 
-  const setDay = day => setState({ ...state, day });
+  const setDay = day => dispatch({ type: SET_DAY, day });
 
   const dayNumber = id => {
     const day = Math.floor(id / 5);
-    if (day === 5) return 4;
+    if (id % 5 === 0) {
+      return day - 1;
+    }
     return day;
   };
 
@@ -72,7 +103,7 @@ export default function useApplicationData() {
     return Promise.resolve(
       axios.put(`/api/appointments/${id}`, appointment)
     ).then(() => {
-      setState({ ...state, appointments, days });
+      dispatch({ type: SET_INTERVIEW, data: { appointments, days } });
     });
   }
 
@@ -105,10 +136,17 @@ export default function useApplicationData() {
 
     return Promise.resolve(axios.delete(`/api/appointments/${id}`, id)).then(
       () => {
-        setState({ ...state, appointments, days });
+        dispatch({ type: SET_INTERVIEW, data: { appointments, days } });
       }
     );
   }
+
+  //   return Promise.resolve(axios.delete(`/api/appointments/${id}`, id)).then(
+  //     () => {
+  //       setState({ ...state, appointments, days });
+  //     }
+  //   );
+  // }
 
   useEffect(() => {
     Promise.all([
@@ -117,15 +155,34 @@ export default function useApplicationData() {
       Promise.resolve(axios.get("/api/interviewers")),
     ])
       .then(all => {
-        setState(prev => ({
-          ...prev,
-          days: all[0].data,
-          appointments: all[1].data,
-          interviewers: all[2].data,
-        }));
+        dispatch({
+          type: SET_APPLICATION_DATA,
+          data: {
+            days: all[0].data,
+            appointments: all[1].data,
+            interviewers: all[2].data,
+          },
+        });
       })
       .catch(e => e.stack);
   }, []);
+
+  // useEffect(() => {
+  //   Promise.all([
+  //     Promise.resolve(axios.get("/api/days")),
+  //     Promise.resolve(axios.get("/api/appointments")),
+  //     Promise.resolve(axios.get("/api/interviewers")),
+  //   ])
+  //     .then(all => {
+  //       setState(prev => ({
+  //         ...prev,
+  //         days: all[0].data,
+  //         appointments: all[1].data,
+  //         interviewers: all[2].data,
+  //       }));
+  //     })
+  //     .catch(e => e.stack);
+  // }, []);
 
   return { state, setDay, bookInterview, cancelInterview };
 }
