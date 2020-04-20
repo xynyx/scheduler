@@ -10,12 +10,12 @@ const Form = props => {
 
   function reset() {
     setName("");
-    return setInterviewer(null);
+    setInterviewer(null);
   }
 
   function cancel() {
     reset();
-    return onCancel;
+    onCancel();
   }
 
   function validate() {
