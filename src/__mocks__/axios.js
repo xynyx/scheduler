@@ -1,41 +1,17 @@
 export default {
+  defaults: { baseURL: ""},
   get: jest.fn(url => {
-    //   const data = {
-    //   "/api/days": "days",
-    //   "/api/appointments": "appointments",
-    //   "/api.interviewers": "interviewers"
-    //   // days: "/api/days",
-    //   // appointments: "/api/appointments",
-    //   // interviewers: "/api/interviewers"
-    // }
-    // const dataType = data[url];
-    // return Promise.resolve({
-    //   status: 200,
-    //   statusText: "OK",
-    //   data: fixtures[dataType],
-    // })
-
-    if (url === "/api/days") {
-      return Promise.resolve({
-        status: 200,
-        statusText: "OK",
-        data: fixtures.days,
-      });
-    }
-    if (url === "/api/appointments") {
-      return Promise.resolve({
-        status: 200,
-        statusText: "OK",
-        data: fixtures.appointments,
-      });
-    }
-    if (url === "/api/interviewers") {
-      return Promise.resolve({
-        status: 200,
-        statusText: "OK",
-        data: fixtures.interviewers,
-      });
-    }
+    const data = {
+      "/api/days": "days",
+      "/api/appointments": "appointments",
+      "/api/interviewers": "interviewers",
+    };
+    const dataType = data[url];
+    return Promise.resolve({
+      status: 200,
+      statusText: "OK",
+      data: fixtures[dataType],
+    });
   }),
 };
 
