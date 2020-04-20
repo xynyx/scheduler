@@ -87,7 +87,7 @@ export default function useApplicationData() {
       [id]: appointment,
     };
 
-    console.log("STATE", appointment);
+    console.log("STATE", appointments);
     const daysCopy = [...state.days];
     const specificDayCopy = {
       ...state.days[dayNumber(id)],
@@ -168,7 +168,7 @@ export default function useApplicationData() {
     //   console.log(connection.readyState);
     // };
     return () => connection.close();
-  });
+  }, [state.appointments]);
 
   useEffect(() => {
     Promise.all([
