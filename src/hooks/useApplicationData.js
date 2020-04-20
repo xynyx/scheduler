@@ -5,31 +5,6 @@ const SET_DAY = "SET_DAY";
 const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
 const SET_INTERVIEW = "SET_INTERVIEW";
 
-function reducer(state, action) {
-  switch (action.type) {
-    case SET_DAY:
-      return {
-        ...state,
-        day: action.day,
-      };
-    case SET_APPLICATION_DATA:
-      return {
-        ...state,
-        ...action.payload,
-      };
-    case SET_INTERVIEW:
-      return {
-        ...state,
-        ...action.payload,
-      };
-
-    default:
-      throw new Error(
-        `Tried to reduce with unsupported action type: ${action.type}`
-      );
-  }
-}
-
 export default function useApplicationData() {
   const [state, dispatch] = useReducer(reducer, {
     day: "Monday",
@@ -40,13 +15,13 @@ export default function useApplicationData() {
 
   const setDay = day => dispatch({ type: SET_DAY, day });
 
-  const dayNumber = id => {
+  function dayNumber(id) {
     const day = Math.floor(id / 5);
     if (id % 5 === 0) {
       return day - 1;
     }
     return day;
-  };
+  }
 
   function remainingSpots(day, dayCopy, appointments) {
     const appointmentIDArray = dayCopy[day].appointments;
@@ -60,19 +35,56 @@ export default function useApplicationData() {
     return numberOfSpotsLeft;
   }
 
-  // const updatedDaysWithSpots = (daysCopy, day, appointments) => {
-  //   const specificDayCopy = {
-  //     ...state.days[day],
-  //     spots: remainingSpots(day, daysCopy, appointments),
-  //   };
-  //   const days = daysCopy.map((day, index) => {
-  //     if (index === day) {
-  //       return specificDayCopy;
-  //     }
-  //     return day;
-  //   });
-  //   return days;
-  // };
+  function reducer(state, action) {
+    switch (action.type) {
+      case SET_DAY:
+        return {
+          ...state,
+          day: action.day,
+        };
+      case SET_APPLICATION_DATA:
+        return {
+          ...state,
+          ...action.payload,
+        };
+      case SET_INTERVIEW: {
+        const dayNum = dayNumber(action.id);
+        const appointment = {
+          ...state.appointments[action.id],
+          interview: action.interview,
+        };
+
+        const appointments = {
+          ...state.appointments,
+          [action.id]: appointment,
+        };
+
+        const daysCopy = [...state.days];
+        const specificDayCopy = {
+          ...state.days[dayNum],
+          spots: remainingSpots(dayNum, daysCopy, appointments),
+        };
+
+        const days = daysCopy.map((day, index) => {
+          if (index === dayNum) {
+            return specificDayCopy;
+          }
+          return day;
+        });
+
+        return {
+          ...state,
+          appointments,
+          days,
+        };
+      }
+
+      default:
+        throw new Error(
+          `Tried to reduce with unsupported action type: ${action.type}`
+        );
+    }
+  }
 
   // CRASHES WHEN NO INTERVIEWER IS SELECTED....
 
@@ -82,59 +94,17 @@ export default function useApplicationData() {
       interview: { ...interview },
     };
 
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment,
-    };
-
-    console.log("STATE", appointments);
-    const daysCopy = [...state.days];
-    const specificDayCopy = {
-      ...state.days[dayNumber(id)],
-      spots: remainingSpots(dayNumber(id), daysCopy, appointments),
-    };
-
-    const days = daysCopy.map((day, index) => {
-      if (index === dayNumber(id)) {
-        return specificDayCopy;
-      }
-      return day;
-    });
-
     return Promise.resolve(
       axios.put(`/api/appointments/${id}`, appointment)
     ).then(() => {
-      dispatch({ type: SET_INTERVIEW, payload: { appointments, days } });
+      dispatch({ type: SET_INTERVIEW, id, interview });
     });
   }
 
   function cancelInterview(id) {
-    const appointment = {
-      ...state.appointments[id],
-      interview: null,
-    };
-
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment,
-    };
-
-    const daysCopy = [...state.days];
-    const specificDayCopy = {
-      ...state.days[dayNumber(id)],
-      spots: remainingSpots(dayNumber(id), daysCopy, appointments),
-    };
-
-    const days = daysCopy.map((day, index) => {
-      if (index === dayNumber(id)) {
-        return specificDayCopy;
-      }
-      return day;
-    });
-
     return Promise.resolve(axios.delete(`/api/appointments/${id}`, id)).then(
       () => {
-        dispatch({ type: SET_INTERVIEW, payload: { appointments, days } });
+        dispatch({ type: SET_INTERVIEW, id, interview: null });
       }
     );
   }
@@ -142,33 +112,16 @@ export default function useApplicationData() {
   useEffect(() => {
     const connection = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
     connection.onopen = () => {
-      connection.send("ping");
       connection.onmessage = event => {
-        // console.log("STATE WTF", state)
-        const interview = JSON.parse(event.data);
-        if (interview.type === SET_INTERVIEW) {
-          // console.log("ID", interview.id)
-          const appointments = {
-            ...state.appointments,
-            [interview.id]: {
-              ...state.appointments[interview.id],
-              interview: interview.interview,
-            },
-          };
-          console.log("INTERVIEW", interview);
-          // console.log("HI");
-          console.log("COPY", appointments);
-          dispatch({ type: SET_INTERVIEW, appointments });
+        const interviewData = JSON.parse(event.data);
+        const { id, interview } = interviewData;
+        if (interviewData.type === SET_INTERVIEW) {
+          dispatch({ type: SET_INTERVIEW, id, interview });
         }
-        // console.log(`Message Received: ${event.data}`)
       };
     };
-    // console.log(connection.readyState);
-    // connection.onopen = event => {
-    //   console.log(connection.readyState);
-    // };
     return () => connection.close();
-  }, [state.appointments]);
+  }, []);
 
   useEffect(() => {
     Promise.all([
