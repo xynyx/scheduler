@@ -114,8 +114,8 @@ export default function useApplicationData() {
     connection.onopen = () => {
       connection.onmessage = event => {
         const interviewData = JSON.parse(event.data);
-        const { id, interview } = interviewData;
-        if (interviewData.type === SET_INTERVIEW) {
+        const { id, interview, type } = interviewData;
+        if (type === SET_INTERVIEW) {
           dispatch({ type: SET_INTERVIEW, id, interview });
         }
       };
