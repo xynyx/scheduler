@@ -108,11 +108,11 @@ export default function useApplicationData() {
       }
     );
   }
-  // Opening WebSocket connection
+  // WebSocket connection
   useEffect(() => {
-    const connection = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
-    connection.onopen = () => {
-      connection.onmessage = event => {
+    const ws = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+    ws.onopen = () => {
+      ws.onmessage = event => {
         const interviewData = JSON.parse(event.data);
         const { id, interview, type } = interviewData;
         if (type === SET_INTERVIEW) {
@@ -120,7 +120,7 @@ export default function useApplicationData() {
         }
       };
     };
-    return () => connection.close();
+    return () => ws.close();
   }, []);
 
   useEffect(() => {
