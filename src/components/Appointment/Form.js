@@ -8,15 +8,15 @@ const Form = props => {
   const [error, setError] = useState("");
   const { interviewers, onSave, onCancel } = props;
 
-  // function reset() {
-  //   setName("");
-  //   return setInterviewer(null);
-  // }
+  function reset() {
+    setName("");
+    return setInterviewer(null);
+  }
 
-  // function cancel() {
-  //   reset();
-  //   return onCancel;
-  // }
+  function cancel() {
+    reset();
+    return onCancel;
+  }
 
   function validate() {
     if (!name) {
@@ -27,7 +27,7 @@ const Form = props => {
       setError("An interviewer must be selected");
       return;
     }
-
+    setError("");
     onSave(name, interviewer);
   }
 
@@ -54,10 +54,10 @@ const Form = props => {
       </section>
       <section className="appointment__card-right">
         <section className="appointment__actions">
-          <Button onClick={onCancel} danger>
+          <Button onClick={cancel} danger>
             Cancel
           </Button>
-          <Button onClick={() => validate()} confirm>
+          <Button onClick={validate} confirm>
             Save
           </Button>
         </section>
