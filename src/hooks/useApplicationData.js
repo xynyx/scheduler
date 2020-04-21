@@ -108,6 +108,7 @@ export default function useApplicationData() {
       }
     );
   }
+  
   // WebSocket connection
   useEffect(() => {
     const ws = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
