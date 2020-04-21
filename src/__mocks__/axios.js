@@ -13,8 +13,16 @@ export default {
       data: fixtures[dataType],
     });
   }),
+  put: jest.fn(() => {
+    return Promise.resolve({
+      status: 204,
+      statusText: "No Content"
+    })
+  })
 };
 
+
+/*      axios.put(`/api/appointments/${id}`, appointment) */
 const fixtures = {
   days: [
     {
