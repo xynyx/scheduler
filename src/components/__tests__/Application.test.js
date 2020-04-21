@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 
 import {
   render,
@@ -11,7 +12,8 @@ import {
   getByAltText,
   getByPlaceholderText,
   queryByText,
-  queryByAltText
+  queryByAltText,
+  getByTestId,
 } from "@testing-library/react";
 
 import Application from "components/Application";
@@ -92,5 +94,34 @@ describe("Application", () => {
     );
 
     expect(getByText(day, "2 spots remaining")).toBeInTheDocument();
+  });
+
+  it("loads data, edits an interview and keeps the spots remaining for Monday the same", async () => {
+    const { container } = render(<Application />);
+
+    await waitForElement(() => getByText(container, "Archie Cohen"));
+
+    const appointment = getAllByTestId(container, "appointment").find(day =>
+      queryByText(day, "Archie Cohen")
+    );
+
+    fireEvent.click(queryByAltText(appointment, "Edit"));
+
+    expect(queryByText(appointment, "Save")).toBeInTheDocument();
+
+    fireEvent.change(getByTestId(appointment, "student-name-input"), {
+      target: { value: "Matt Taylor" },
+    });
+
+    fireEvent.click(getByText(appointment, "Save"));
+    expect(getByText(appointment, "Saving")).toBeInTheDocument();
+
+    await waitForElement(() => queryByText(appointment, "Matt Taylor"));
+
+    const day = getAllByTestId(container, "day").find(day =>
+      queryByText(day, "Monday")
+    );
+
+    expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
   });
 });
