@@ -1,5 +1,5 @@
 export default {
-  defaults: { baseURL: ""},
+  defaults: { baseURL: "" },
   get: jest.fn(url => {
     const data = {
       "/api/days": "days",
@@ -16,19 +16,17 @@ export default {
   put: jest.fn(() => {
     return Promise.resolve({
       status: 204,
-      statusText: "No Content"
-    })
+      statusText: "No Content",
+    });
   }),
   delete: jest.fn(() => {
     return Promise.resolve({
       status: 204,
-      statusText: "No Content"
-    })
-  })
+      statusText: "No Content",
+    });
+  }),
 };
 
-
-/*      axios.put(`/api/appointments/${id}`, appointment) */
 const fixtures = {
   days: [
     {

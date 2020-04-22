@@ -17,8 +17,3 @@ export default function DayList(props) {
 
   return <ul>{dayList}</ul>;
 }
-
-// When on specific day
-// Knows im on tuesday - says 3 spots remaining
-// If i delete appointment - should update to 4 spots remaining
-// If i add appt - should update to 3 spots again

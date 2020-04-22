@@ -18,7 +18,6 @@ export default function Application() {
     cancelInterview,
   } = useApplicationData();
 
-
   const appointmentsForDay = getAppointmentsForDay(state, state.day);
   const interviewersForDay = getInterviewersForDay(state, state.day);
   const appointmentList = appointmentsForDay.map(appointment => {
@@ -45,7 +44,6 @@ export default function Application() {
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
           <DayList days={state.days} day={state.day} setDay={setDay} />
-          
         </nav>
         <img
           className="sidebar__lhl sidebar--centered"

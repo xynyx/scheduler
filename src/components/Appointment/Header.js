@@ -1,6 +1,6 @@
 import React from "react";
 
-const Header = (props) => {
+const Header = props => {
   const { time } = props;
   return (
     <header className="appointment__time">

@@ -11,7 +11,6 @@ InterviewerList.propTypes = {
 export default function InterviewerList(props) {
   const { interviewers, onChange } = props;
 
-
   const interviewerList = interviewers.map(interviewer => {
     return (
       <InterviewerListItem
