@@ -2,7 +2,7 @@ import React from "react";
 import Button from "components/Button";
 import classNames from "classnames";
 
-const Confirm = (props) => {
+const Confirm = props => {
   const { onConfirm, onCancel } = props;
 
   // Useful or necessary?
