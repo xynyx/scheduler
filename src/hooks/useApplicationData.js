@@ -52,6 +52,7 @@ export default function useApplicationData() {
     return () => ws.close();
   }, []);
 
+  // Renders initial database data on load
   useEffect(() => {
     Promise.all([
       Promise.resolve(axios.get("/api/days")),
